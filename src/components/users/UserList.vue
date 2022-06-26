@@ -1,10 +1,17 @@
 <template>
   <base-container>
     <h2>Active Users</h2>
-    <base-search @search="updateSearch" :search-term="enteredSearchTerm"></base-search>
+    <base-search
+      @search="updateSearch"
+      :search-term="enteredSearchTerm"
+    ></base-search>
     <div>
-      <button @click="sort('asc')" :class="{selected: sorting === 'asc'}">Sort Ascending</button>
-      <button @click="sort('desc')" :class="{selected: sorting === 'desc'}">Sort Descending</button>
+      <button @click="sort('asc')" :class="{ selected: sorting === 'asc' }">
+        Sort Ascending
+      </button>
+      <button @click="sort('desc')" :class="{ selected: sorting === 'desc' }">
+        Sort Descending
+      </button>
     </div>
     <ul>
       <user-item
@@ -19,8 +26,8 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue';
-
+import { ref, computed } from 'vue';
+import useSearch from '../../hooks/search.js';
 import UserItem from './UserItem.vue';
 
 export default {
@@ -30,32 +37,37 @@ export default {
   props: ['users'],
   emits: ['list-projects'],
   setup(props) {
-    const enteredSearchTerm = ref('');
-    const activeSearchTerm = ref('');
+    // const enteredSearchTerm = ref('');
+    // const activeSearchTerm = ref('');
 
-    const availableUsers = computed(function () {
-      let users = [];
-      if (activeSearchTerm.value) {
-        users = props.users.filter((usr) =>
-          usr.fullName.includes(activeSearchTerm.value)
-        );
-      } else if (props.users) {
-        users = props.users;
-      }
-      return users;
-    });
+    // const availableUsers = computed(function () {
+    //   let users = [];
+    //   if (activeSearchTerm.value) {
+    //     users = props.users.filter((usr) =>
+    //       usr.fullName.includes(activeSearchTerm.value)
+    //     );
+    //   } else if (props.users) {
+    //     users = props.users;
+    //   }
+    //   return users;
+    // });
 
-    watch(enteredSearchTerm, function (newValue) {
-      setTimeout(() => {
-        if (newValue === enteredSearchTerm.value) {
-          activeSearchTerm.value = newValue;
-        }
-      }, 300);
-    });
+    // watch(enteredSearchTerm, function (newValue) {
+    //   setTimeout(() => {
+    //     if (newValue === enteredSearchTerm.value) {
+    //       activeSearchTerm.value = newValue;
+    //     }
+    //   }, 300);
+    // });
 
-    function updateSearch(val) {
-      enteredSearchTerm.value = val;
-    }
+    // function updateSearch(val) {
+    //   enteredSearchTerm.value = val;
+    // }
+
+    const { availableUsers, updateSearch, enteredSearchTerm } = useSearch(
+      props.users,
+      'fullName'
+    );
 
     const sorting = ref(null);
     const displayedUsers = computed(function () {
@@ -84,7 +96,7 @@ export default {
       updateSearch,
       displayedUsers,
       sorting,
-      sort
+      sort,
     };
   },
   // data() {
