@@ -7,11 +7,11 @@ export default function useSearch(items, itemProp) {
   const availableUsers = computed(function () {
     let users = [];
     if (activeSearchTerm.value) {
-      users = items.filter((usr) =>
+      users = items.value.filter((usr) =>
         usr[itemProp].includes(activeSearchTerm.value)
       );
-    } else if (items) {
-      users = items;
+    } else if (items.value) {
+      users = items.value;
     }
     return users;
   });
